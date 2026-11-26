@@ -1,0 +1,29 @@
+# Coleta semanal das fontes públicas e carga no banco do painel (rpbranding.com.br/abc).
+# Secrets: ABC_TOKEN. Variável do repositório (opcional): ABC_URL, padrão https://rpbranding.com.br/abc
+name: Coletar dados
+
+on:
+  schedule:
+    - cron: "17 9 * * 1"   # segundas, 06:17 em Brasília
+  workflow_dispatch:
+    inputs:
+      anos_tce:
+        description: "Anos do TCE-SP (ex.: 2024,2025,2026). Vazio = ano passado e o atual."
+        required: false
+
+jobs:
+  coletar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install openpyxl==3.1.5
+      - name: Coletar e enviar
+        env:
+          ABC_URL: ${{ vars.ABC_URL || 'https://rpbranding.com.br/abc' }}
+          ABC_TOKEN: ${{ secrets.ABC_TOKEN }}
+          ANOS_TCE: ${{ inputs.anos_tce }}
+        run: python scripts/coletar.py

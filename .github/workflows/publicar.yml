@@ -1,12 +1,13 @@
 # Publica a pasta site/ na hospedagem RP Brand (rpbranding.com.br/abc/) por FTP.
-# Precisa dos secrets do repositório: FTP_SERVIDOR, FTP_USUARIO, FTP_SENHA.
+# Gera site/api/config.php a partir dos secrets; ele nunca vai para o repositório.
+# Secrets: FTP_SERVIDOR, FTP_USUARIO, FTP_SENHA, MYSQL_BANCO, MYSQL_USUARIO, MYSQL_SENHA, ABC_TOKEN.
 # Use um usuário FTP exclusivo do painel ABC, com pasta inicial public_html/abc.
 name: Publicar na RP Brand
 
 on:
   push:
     branches: [main]
-    paths: ["site/**"]
+    paths: ["site/**", "sql/**"]
   workflow_dispatch:
 
 concurrency:
@@ -18,6 +19,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Montar config.php e schema
+        env:
+          MYSQL_BANCO: ${{ secrets.MYSQL_BANCO }}
+          MYSQL_USUARIO: ${{ secrets.MYSQL_USUARIO }}
+          MYSQL_SENHA: ${{ secrets.MYSQL_SENHA }}
+          ABC_TOKEN: ${{ secrets.ABC_TOKEN }}
+        run: |
+          cp sql/schema.sql site/api/schema.sql
+          php -r '
+            $c = ["db_host" => "localhost",
+                  "db_nome" => getenv("MYSQL_BANCO"),
+                  "db_usuario" => getenv("MYSQL_USUARIO"),
+                  "db_senha" => getenv("MYSQL_SENHA"),
+                  "token_importacao" => getenv("ABC_TOKEN")];
+            foreach ($c as $k => $v) { if ($v === false || $v === "") { fwrite(STDERR, "secret faltando: $k\n"); exit(1); } }
+            file_put_contents("site/api/config.php", "<?php\nreturn " . var_export($c, true) . ";\n");'
 
       - name: Enviar por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

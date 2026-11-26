@@ -1,0 +1,5 @@
+# Só importar.php e dados.php ficam acessíveis pela web.
+Options -Indexes
+<FilesMatch "^(config|lib)\.php$|\.sql$">
+  Require all denied
+</FilesMatch>
