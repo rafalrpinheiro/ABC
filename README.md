@@ -5,6 +5,21 @@ Santo André, São Bernardo do Campo, São Caetano do Sul, Diadema, Mauá, Ribei
 
 Projeto independente, sem relação com a SGRI ou com o portfoliosgri.
 
+## Hospedagem: RP Brand
+
+Tudo fica na hospedagem RP Brand (rpbranding.com.br, Hostinger):
+
+- **Site:** `rpbranding.com.br/abc/`, publicado pelo robô `.github/workflows/publicar.yml` a cada mudança em `site/` no branch `main`.
+- **Banco:** MySQL da própria hospedagem, com usuário exclusivo do painel.
+
+Secrets do repositório (Settings → Secrets and variables → Actions):
+
+| Secret | Valor |
+| --- | --- |
+| `FTP_SERVIDOR` | servidor FTP da Hostinger |
+| `FTP_USUARIO` | usuário FTP exclusivo do ABC, com pasta inicial `public_html/abc` |
+| `FTP_SENHA` | senha desse usuário |
+
 - `docs/etapa1-fontes.md`: resultado do teste das fontes (26/11/2026).
 - `scripts/testar_fontes.py`: repete o teste das fontes principais para as 7 cidades.
 

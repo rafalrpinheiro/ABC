@@ -1,0 +1,29 @@
+# Publica a pasta site/ na hospedagem RP Brand (rpbranding.com.br/abc/) por FTP.
+# Precisa dos secrets do repositório: FTP_SERVIDOR, FTP_USUARIO, FTP_SENHA.
+# Use um usuário FTP exclusivo do painel ABC, com pasta inicial public_html/abc.
+name: Publicar na RP Brand
+
+on:
+  push:
+    branches: [main]
+    paths: ["site/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: publicar
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enviar por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVIDOR }}
+          username: ${{ secrets.FTP_USUARIO }}
+          password: ${{ secrets.FTP_SENHA }}
+          local-dir: ./site/
+          server-dir: ./
