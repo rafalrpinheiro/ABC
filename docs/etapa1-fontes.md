@@ -13,13 +13,13 @@ Teste feito a partir do ambiente de nuvem "ABC", com acesso liberado só aos dom
 | CNES | `apidadosabertos.saude.gov.br/cnes/estabelecimentos?codigo_municipio=` (6 dígitos) | |
 | DataSUS TabNet | `https://tabnet.datasus.gov.br/cgi/...` | Só por https |
 | Cadastur | CKAN `dados.turismo.gov.br` | Arquivos CSV |
-| Obrasgov | `api.obrasgov.gestao.gov.br/obrasgov/api/projeto-investimento?uf=SP` | Sem filtro por município conhecido; recorte por cidade em validação |
 | MapBiomas, Cemaden | sites respondem | Formato de extração a definir |
 
 ## Precisam de ajuste
 
 | Fonte | Problema |
 | --- | --- |
+| Obrasgov | `projeto-investimento?uf=SP` respondeu no 1º teste; depois de consultas em sequência passou a dar 403 (Cloudflare). Só filtra por UF |
 | Portal da Transparência | API exige chave gratuita (header `chave-api-dados`) |
 | Transferegov API | Bloqueio Cloudflare (403) a partir do servidor |
 | SSP-SP | Site em Angular; dados por município via exportação oficial — leitura automática não testada |
